@@ -96,7 +96,7 @@ module Mongoid::History
 
         versions.each do |v|
           self.attributes = v.undo_attr(modifier)
-          self.version = v.version
+          self.version = v.version - 1
         end
         self
       end
