@@ -90,6 +90,16 @@ module Mongoid::History
         save!
       end
 
+      def reify(modifier = '', options_or_version=nil)
+        versions = get_versions_criteria(options_or_version).to_a
+        versions.sort!{|v1, v2| v2.version <=> v1.version}
+
+        versions.each do |v|
+          self.attributes = v.undo_attr(modifier)
+        end
+        self
+      end
+
       def redo!(modifier, options_or_version=nil)
         versions = get_versions_criteria(options_or_version).to_a
         versions.sort!{|v1, v2| v1.version <=> v2.version}
